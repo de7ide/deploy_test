@@ -1,8 +1,23 @@
-def inf_num():
-    num = 0
-    while True:
-        yield num
-        num += 1
+import asyncio
 
-for i in inf_num():
-    print(i, end='$332%%2244#@@')
+from aiogram import Bot, Dispatcher
+from aiogram.fsm.storage.redis import RedisStorage
+
+from bot.config_reader import BotSettings
+from bot.handlers.start import router
+
+
+async def main():
+    settings = BotSettings()
+    bot = Bot(
+        token=settings.bot_token.get_secret_value()
+    )
+    storage = RedisStorage.from_url(str(settings.redis_dsn))
+    dp = Dispatcher(storage=storage)
+    dp.include_routers(*router)
+
+    print("Starting bot")
+    await dp.start_polling(bot)
+    print('Bot stopped')
+
+asyncio.run(main())

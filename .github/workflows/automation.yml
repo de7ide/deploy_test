@@ -5,10 +5,8 @@ name: "automate-all-the-things"
 # В данном случае: на каждый пуш в ветку master
 on:
   push:
-    branches-ignore:
+    branches:
       - 'master'
-    tags:
-      - v*
 
 # Задачи, которые будут выполняться в рамках флоу
 jobs:
@@ -19,15 +17,6 @@ jobs:
     runs-on: ubuntu-latest
     # Шаги выполнения задачи (о них ниже по тексту)
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
-        with:
-            node-version: '14'
-      - run: npm install -g bats
-      - run: bats -v
-      - run: |
-         echo "Workflow done"
-         echo "Enjoy your new version"
       -
         name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -42,4 +31,4 @@ jobs:
           push: true
           # С каким тегом будет загружен образ
           # Переменные тоже поддерживаются
-          tags: groosha/test-docker-push:latest
+          tags: des8de/test-docker-push:latest
